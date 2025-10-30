@@ -18,7 +18,6 @@ type
   TSample = array[0..3] of Single; // [x1, x2, x3, y]
   TDataset = array[0..4] of TSample;
 
-
 var
   XAnd1, Y, AB, Predictions, Errors, DeltaAB: TMatrix;
   i, j, k, n, numCoefficients: Integer;
