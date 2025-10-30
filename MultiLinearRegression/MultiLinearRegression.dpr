@@ -5,7 +5,8 @@
 uses
   SysUtils,
   Windows,
-  Math;
+  Math,
+  MatrixUtility in 'MatrixUtility.pas';
 
 const
   { 1. Set the parameters for the model }
@@ -16,7 +17,7 @@ const
 type
   TSample = array[0..3] of Single; // [x1, x2, x3, y]
   TDataset = array[0..4] of TSample;
-  TMatrix = array of array of Single;
+
 
 var
   XAnd1, Y, AB, Predictions, Errors, DeltaAB: TMatrix;
@@ -32,91 +33,6 @@ const
     (4, 2, 3, 16),
     (1, 4, 2, 17)
   );
-
-{ --- Matrix utility functions --- }
-
-function CreateMatrix(rows, cols: Integer): TMatrix;
-var
-  r: Integer;
-begin
-  SetLength(Result, rows, cols);
-  for r := 0 to rows - 1 do
-    FillChar(Result[r][0], cols * SizeOf(Single), 0);
-end;
-
-function MultiplyDot(const A, B: TMatrix): TMatrix;
-var
-  i, j, k, aRows, aCols, bCols: Integer;
-begin
-  aRows := Length(A);
-  aCols := Length(A[0]);
-  bCols := Length(B[0]);
-  Result := CreateMatrix(aRows, bCols);
-
-  for i := 0 to aRows - 1 do
-    for j := 0 to bCols - 1 do
-    begin
-      Result[i][j] := 0;
-      for k := 0 to aCols - 1 do
-        Result[i][j] := Result[i][j] + A[i][k] * B[k][j];
-    end;
-end;
-
-function Subtract(const A, B: TMatrix): TMatrix;
-var
-  i, j: Integer;
-begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
-      Result[i][j] := A[i][j] - B[i][j];
-end;
-
-function Transpose(const A: TMatrix): TMatrix;
-var
-  i, j: Integer;
-begin
-  Result := CreateMatrix(Length(A[0]), Length(A));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
-      Result[j][i] := A[i][j];
-end;
-
-function MultiplyScalar(const A: TMatrix; s: Single): TMatrix;
-var
-  i, j: Integer;
-begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
-      Result[i][j] := A[i][j] * s;
-end;
-
-function PowerMatrix(const A: TMatrix; p: Integer): TMatrix;
-var
-  i, j: Integer;
-begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
-      Result[i][j] := Power(A[i][j], p);
-end;
-
-function Mean(const A: TMatrix): Single;
-var
-  i, j, count: Integer;
-  sum: Single;
-begin
-  sum := 0;
-  count := 0;
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
-    begin
-      sum := sum + A[i][j];
-      Inc(count);
-    end;
-  Result := sum / count;
-end;
 
 begin
   SetConsoleOutputCP(CP_UTF8);
@@ -151,8 +67,6 @@ begin
     meanSquaredError := Mean(PowerMatrix(Errors, 2));
 
     { Gradient calculation: ∂MSE/∂AB = -2/n * X^T * Errors }
-    //DeltaAB := MultiplyDot(Transpose(XAnd1), Errors);
-    //DeltaAB := MultiplyScalar(DeltaAB, -2.0 / n);
     DeltaAB := MultiplyScalar(MultiplyDot(Transpose(XAnd1), Errors), -2.0 / n);
 
     { Update parameters }
