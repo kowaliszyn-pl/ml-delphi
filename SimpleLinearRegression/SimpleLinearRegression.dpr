@@ -1,4 +1,4 @@
-﻿program LinearRegression;
+﻿program SimpleLinearRegression;
 
 {$APPTYPE CONSOLE}
 

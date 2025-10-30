@@ -3,7 +3,10 @@
         <ProjectGuid>{186A69E5-66C2-4503-ACAC-FA46CD606862}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="LinearRegression.dproj">
+        <Projects Include="SimpleLinearRegression\SimpleLinearRegression.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MultiLinearRegression\MultiLinearRegression.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -14,23 +17,32 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="LinearRegression">
-        <MSBuild Projects="LinearRegression.dproj"/>
+    <Target Name="SimpleLinearRegression">
+        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj"/>
     </Target>
-    <Target Name="LinearRegression:Clean">
-        <MSBuild Projects="LinearRegression.dproj" Targets="Clean"/>
+    <Target Name="SimpleLinearRegression:Clean">
+        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="LinearRegression:Make">
-        <MSBuild Projects="LinearRegression.dproj" Targets="Make"/>
+    <Target Name="SimpleLinearRegression:Make">
+        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="MultiLinearRegression">
+        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj"/>
+    </Target>
+    <Target Name="MultiLinearRegression:Clean">
+        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="MultiLinearRegression:Make">
+        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="LinearRegression"/>
+        <CallTarget Targets="SimpleLinearRegression;MultiLinearRegression"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="LinearRegression:Clean"/>
+        <CallTarget Targets="SimpleLinearRegression:Clean;MultiLinearRegression:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="LinearRegression:Make"/>
+        <CallTarget Targets="SimpleLinearRegression:Make;MultiLinearRegression:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
