@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{186A69E5-66C2-4503-ACAC-FA46CD606862}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="LinearRegression.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="LinearRegression">
+        <MSBuild Projects="LinearRegression.dproj"/>
+    </Target>
+    <Target Name="LinearRegression:Clean">
+        <MSBuild Projects="LinearRegression.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LinearRegression:Make">
+        <MSBuild Projects="LinearRegression.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="LinearRegression"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="LinearRegression:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="LinearRegression:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
