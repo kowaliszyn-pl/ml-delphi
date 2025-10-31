@@ -63,7 +63,6 @@ begin
       sumError := sumError + error;
     end;
 
-    meanSquaredError := squaredError / n;
     deltaA := -2.0 / n * sumErrorValue;
     deltaB := -2.0 / n * sumError;
 
@@ -72,8 +71,12 @@ begin
     b := b - LearningRate * deltaB;
 
     if (i mod PrintEvery = 0) then
+    begin
+      meanSquaredError := squaredError / n;
+
       Writeln(Format('Iteration: %5d | MSE: %10.5f | ∂MSE/∂a: %10.4f | ∂MSE/∂b: %10.4f | a: %9.4f | b: %9.4f',
   [i, meanSquaredError, deltaA, deltaB, a, b]));
+    end;
   end;
 
   { 5. Output learned parameters }
