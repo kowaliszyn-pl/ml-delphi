@@ -1,2 +1,6 @@
 __history
 __recovery
+**/*/Win32/Debug
+*.local
+*.dcu
+*.identcache
