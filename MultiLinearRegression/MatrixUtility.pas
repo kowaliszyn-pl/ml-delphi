@@ -24,11 +24,12 @@ implementation
 
 function CreateMatrix(rows, cols: Integer): TMatrix;
 var
-  r: Integer;
+  rowIndex, rowSize: Integer;
 begin
   SetLength(Result, rows, cols);
-  for r := 0 to rows - 1 do
-    FillChar(Result[r][0], cols * SizeOf(Single), 0);
+  rowSize := cols * SizeOf(Single);
+  for rowIndex := 0 to rows - 1 do
+    FillChar(Result[rowIndex][0], rowSize, 0);
 end;
 
 function MultiplyDot(const A, B: TMatrix): TMatrix;
@@ -95,13 +96,10 @@ var
   sum: Single;
 begin
   sum := 0;
-  count := 0;
+  count := i * j;
   for i := 0 to High(A) do
     for j := 0 to High(A[0]) do
-    begin
       sum := sum + A[i][j];
-      Inc(count);
-    end;
   Result := sum / count;
 end;
 

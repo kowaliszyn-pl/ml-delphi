@@ -62,9 +62,6 @@ begin
     Predictions := MultiplyDot(XAnd1, AB);
     Errors := Subtract(Y, Predictions);
 
-    { Mean Squared Error }
-    meanSquaredError := Mean(PowerMatrix(Errors, 2));
-
     { Gradient calculation: ∂MSE/∂AB = -2/n * X^T * Errors }
     DeltaAB := MultiplyScalar(MultiplyDot(Transpose(XAnd1), Errors), -2.0 / n);
 
@@ -72,8 +69,13 @@ begin
     AB := Subtract(AB, MultiplyScalar(DeltaAB, LearningRate));
 
     if (i mod PrintEvery = 0) then
+    begin
+      { Mean Squared Error }
+      meanSquaredError := Mean(PowerMatrix(Errors, 2));
+
       Writeln(Format('Iteration: %6d | MSE: %8.5f | a1: %8.4f | a2: %8.4f | a3: %8.4f | b: %8.4f',
         [i, meanSquaredError, AB[0][0], AB[1][0], AB[2][0], AB[3][0]]));
+    end;
   end;
 
   { 5. Output learned parameters }
