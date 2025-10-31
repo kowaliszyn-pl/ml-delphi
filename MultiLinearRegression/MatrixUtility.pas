@@ -35,6 +35,7 @@ end;
 function MultiplyDot(const A, B: TMatrix): TMatrix;
 var
   i, j, k, aRows, aCols, bCols: Integer;
+  sum: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
@@ -44,63 +45,74 @@ begin
   for i := 0 to aRows - 1 do
     for j := 0 to bCols - 1 do
     begin
-      Result[i][j] := 0;
+      sum := 0;
       for k := 0 to aCols - 1 do
-        Result[i][j] := Result[i][j] + A[i][k] * B[k][j];
+        sum := sum + A[i][k] * B[k][j];
+      Result[i][j] := sum;
     end;
 end;
 
 function Subtract(const A, B: TMatrix): TMatrix;
 var
-  i, j: Integer;
+  i, j, aRows, aCols: Integer;
 begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
+  aRows := Length(A);
+  aCols := Length(A[0]);
+  Result := CreateMatrix(aRows, aCols);
+
+  for i := 0 to aRows - 1 do
+    for j := 0 to aCols - 1 do
       Result[i][j] := A[i][j] - B[i][j];
 end;
 
 function Transpose(const A: TMatrix): TMatrix;
 var
-  i, j: Integer;
+  i, j, aRows, aCols: Integer;
 begin
-  Result := CreateMatrix(Length(A[0]), Length(A));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
+  aRows := Length(A);
+  aCols := Length(A[0]);
+  Result := CreateMatrix(aCols, aRows);
+  for i := 0 to aRows - 1 do
+    for j := 0 to aCols - 1 do
       Result[j][i] := A[i][j];
 end;
 
 function MultiplyScalar(const A: TMatrix; s: Single): TMatrix;
 var
-  i, j: Integer;
+  i, j, aRows, aCols: Integer;
 begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
+  aRows := Length(A);
+  aCols := Length(A[0]);
+  Result := CreateMatrix(aRows, aCols);
+  for i := 0 to aRows - 1 do
+    for j := 0 to aCols - 1 do
       Result[i][j] := A[i][j] * s;
 end;
 
 function PowerMatrix(const A: TMatrix; p: Integer): TMatrix;
 var
-  i, j: Integer;
+  i, j, aRows, aCols: Integer;
 begin
-  Result := CreateMatrix(Length(A), Length(A[0]));
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
+  aRows := Length(A);
+  aCols := Length(A[0]);
+  Result := CreateMatrix(aRows, aCols);
+  for i := 0 to aRows - 1 do
+    for j := 0 to aCols - 1 do
       Result[i][j] := Power(A[i][j], p);
 end;
 
 function Mean(const A: TMatrix): Single;
 var
-  i, j, count: Integer;
+  i, j, aRows, aCols: Integer;
   sum: Single;
 begin
+  aRows := Length(A);
+  aCols := Length(A[0]);
   sum := 0;
-  count := i * j;
-  for i := 0 to High(A) do
-    for j := 0 to High(A[0]) do
+  for i := 0 to aRows - 1 do
+    for j := 0 to aCols - 1 do
       sum := sum + A[i][j];
-  Result := sum / count;
+  Result := sum / (aRows * aCols);
 end;
 
 end.
