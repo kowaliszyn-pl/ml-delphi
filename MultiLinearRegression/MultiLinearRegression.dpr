@@ -9,7 +9,7 @@ uses
   MatrixUtility in 'MatrixUtility.pas';
 
 const
-  { 1. Set the parameters for the model }
+  { 1. Set the hyperparameters for the model }
   LearningRate: Single = 0.0005;
   Iterations: Integer = 35000;
   PrintEvery: Integer = 1000;
@@ -24,6 +24,7 @@ var
   meanSquaredError, tempSum: Single;
 
 const
+  { 2. Create dataset }
   { y = 2*x1 + 3*x2 - 1*x3 + 5 }
   data: TDataset = (
     (1, 2, 1, 12),
@@ -52,7 +53,7 @@ begin
     Y[i][0] := data[i][numCoefficients];
   end;
 
-  { 3. Initialize parameters (a1, a2, a3, b) }
+  { 3. Initialize model parameters (a1, a2, a3, b) }
   AB := CreateMatrix(numCoefficients + 1, 1);
 
   { 4. Training loop }

@@ -6,7 +6,7 @@ uses
   SysUtils, Windows;
 
 const
-  { 1. Set the parameters for the model }
+  { 1. Set the hyperparameters for the model }
   LearningRate: Single = 0.0005;
   Iterations: Integer = 35000;
   PrintEvery: Integer = 1000;
@@ -16,31 +16,34 @@ type
   TDataset = array[0..4] of TSample;
 
 var
-  data: TDataset;
   a, b: Single;
   i, j, n: Integer;
   error, squaredError, sumErrorValue, sumError, meanSquaredError: Single;
   x, y, prediction: Single;
   deltaA, deltaB: Single;
 
+const
+  { 2. Create dataset }
+  { y = -2*x + 120 }
+  data: TDataset = (
+    (10, 100),
+    (20, 80),
+    (30, 60),
+    (40, 40),
+    (50, 20)
+  );
+
 begin
   SetConsoleOutputCP(CP_UTF8);
 
-  { 2. Prepare training data }
-  data[0][0] := 10; data[0][1] := 100;
-  data[1][0] := 20; data[1][1] := 80;
-  data[2][0] := 30; data[2][1] := 60;
-  data[3][0] := 40; data[3][1] := 40;
-  data[4][0] := 50; data[4][1] := 20;
-
-  { 3. Initialize model }
+  { 3. Initialize model parameters }
   a := 0;
   b := 0;
 
   { Number of samples }
   n := Length(data);
 
-  { 4. Training loop }
+  { 3. Training loop }
   for i := 0 to Iterations - 1 do
   begin
     { Initialize accumulators for errors }
