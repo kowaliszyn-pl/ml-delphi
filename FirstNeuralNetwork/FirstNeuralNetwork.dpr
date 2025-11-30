@@ -18,13 +18,20 @@ const
   HiddenLayerSize: Integer = 4;
 
 var
-  trainData, testData: TMatrix2D;
-  XTrain, YTrain, XTest, YTest: TMatrix2D;
-  W1, W2, XTrainT, M1, N1, O1, M2, predictions, errors: TMatrix2D;
-  M1Test, N1Test, O1Test, M2Test, testPredictions, testErrors: TMatrix2D;
-  dLdP, dLdW2, dLdO1, dLdN1, dLdW1: TMatrix2D;
+  { Data }
+  trainData, testData, XTrain, YTrain, XTest, YTest: TMatrix2D;
+
+  { Model parameters with gradients }
+  W1, dLdW1, W2, dLdW2: TMatrix2D;
   B1, dLdBias1: TMatrix1D;
-  b2, dLdBias2, negativeTwoOverN, meanSquaredError: Single;
+  b2, dLdBias2: Single;
+
+  { Test predictions }
+  M1Test, N1Test, O1Test, M2Test, testPredictions, testErrors: TMatrix2D;
+
+  { Other }
+  dLdP, dLdO1, dLdN1, XTrainT, M1, N1, O1, M2, predictions, errors: TMatrix2D;
+  negativeTwoOverN, meanSquaredError: Single;
   i, j, iteration, inputFeatureCount, nTrain, nTest: Integer;
   showTestSamples: array of Integer;
 
@@ -104,7 +111,7 @@ begin
     { Update parameters }
     W1 := Subtract(W1, Multiply(dLdW1, LearningRate));
     W2 := Subtract(W2, Multiply(dLdW2, LearningRate));
-    B1 := Subtract(B1, Multiply(dLdBias1 * LearningRate);
+    B1 := Subtract(B1, Multiply(dLdBias1, LearningRate));
     b2 := b2 - (dLdBias2 * LearningRate);
 
     if (iteration mod PrintEvery) = 0 then
@@ -157,13 +164,14 @@ begin
   Writeln('Sample predictions vs actual values:');
   Writeln(Format('%14s%14s%14s', ['Sample No', 'Predicted', 'Actual']));
 
-  SetLength(showTestSamples, 6);
-  showTestSamples[0] := 0;
+  //SetLength(showTestSamples, 6);
+  showTestSamples := [0, 1, 2, nTest - 3, nTest - 2, nTest - 1];
+  {showTestSamples[0] := 0;
   showTestSamples[1] := 1;
   showTestSamples[2] := 2;
   showTestSamples[3] := nTest - 3;
   showTestSamples[4] := nTest - 2;
-  showTestSamples[5] := nTest - 1;
+  showTestSamples[5] := nTest - 1;}
 
   for i := 0 to High(showTestSamples) do
   begin
