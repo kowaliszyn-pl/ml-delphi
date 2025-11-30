@@ -9,6 +9,9 @@
         <Projects Include="MultiLinearRegression\MultiLinearRegression.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="FirstNeuralNetwork\FirstNeuralNetwork.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="MultiLinearRegression:Make">
         <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj" Targets="Make"/>
     </Target>
+    <Target Name="FirstNeuralNetwork">
+        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj"/>
+    </Target>
+    <Target Name="FirstNeuralNetwork:Clean">
+        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FirstNeuralNetwork:Make">
+        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="SimpleLinearRegression;MultiLinearRegression"/>
+        <CallTarget Targets="SimpleLinearRegression;MultiLinearRegression;FirstNeuralNetwork"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="SimpleLinearRegression:Clean;MultiLinearRegression:Clean"/>
+        <CallTarget Targets="SimpleLinearRegression:Clean;MultiLinearRegression:Clean;FirstNeuralNetwork:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="SimpleLinearRegression:Make;MultiLinearRegression:Make"/>
+        <CallTarget Targets="SimpleLinearRegression:Make;MultiLinearRegression:Make;FirstNeuralNetwork:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
