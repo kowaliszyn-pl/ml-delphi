@@ -9,7 +9,7 @@ uses
   MatrixUtility in 'MatrixUtility.pas';
 
 const
-  { 1. Set the hyperparameters for the model }
+  { Hyperparameters for the model }
   LearningRate: Single = 0.0005;
   Iterations: Integer = 48000;
   PrintEvery: Integer = 2000;
@@ -18,12 +18,12 @@ const
   HiddenLayerSize: Integer = 4;
 
 var
-  trainData, testData: TMatrix;
-  XTrain, YTrain, XTest, YTest: TMatrix;
-  W1, W2, XTrainT, M1, N1, O1, M2, predictions, errors: TMatrix;
-  M1Test, N1Test, O1Test, M2Test, testPredictions, testErrors: TMatrix;
-  dLdP, dLdW2, dLdO1, dLdN1, dLdW1: TMatrix;
-  B1, dLdBias1: TFloatArray;
+  trainData, testData: TMatrix2D;
+  XTrain, YTrain, XTest, YTest: TMatrix2D;
+  W1, W2, XTrainT, M1, N1, O1, M2, predictions, errors: TMatrix2D;
+  M1Test, N1Test, O1Test, M2Test, testPredictions, testErrors: TMatrix2D;
+  dLdP, dLdW2, dLdO1, dLdN1, dLdW1: TMatrix2D;
+  B1, dLdBias1: TMatrix1D;
   b2, dLdBias2, negativeTwoOverN, meanSquaredError: Single;
   i, j, iteration, inputFeatureCount, nTrain, nTest: Integer;
   showTestSamples: array of Integer;
@@ -39,11 +39,11 @@ begin
   nTrain := Length(trainData);
   nTest := Length(testData);
 
-  XTrain := CreateMatrix(nTrain, inputFeatureCount);
-  YTrain := CreateMatrix(nTrain, 1);
+  XTrain := CreateMatrix2D(nTrain, inputFeatureCount);
+  YTrain := CreateMatrix2D(nTrain, 1);
 
-  XTest := CreateMatrix(nTest, inputFeatureCount);
-  YTest := CreateMatrix(nTest, 1);
+  XTest := CreateMatrix2D(nTest, inputFeatureCount);
+  YTest := CreateMatrix2D(nTest, 1);
 
   { Fill XTrain / YTrain }
   for i := 0 to nTrain - 1 do
@@ -62,11 +62,11 @@ begin
   end;
 
   { Initialize parameters: W1, B1, W2, b2 }
-  W1 := CreateMatrix(inputFeatureCount, HiddenLayerSize);
+  W1 := CreateMatrix2D(inputFeatureCount, HiddenLayerSize);
   RandomInPlace(W1, RandomSeed);
-  B1 := CreateFloatArray(HiddenLayerSize);
+  B1 := CreateMatrix1D(HiddenLayerSize);
 
-  W2 := CreateMatrix(HiddenLayerSize, 1);
+  W2 := CreateMatrix2D(HiddenLayerSize, 1);
   { We use RandomSeed + 1 because we want different random values than for W1 }
   RandomInPlace(W2, RandomSeed + 1);
   b2 := 0.0;
@@ -84,14 +84,14 @@ begin
     O1 := Sigmoid(N1);
 
     M2 := MultiplyDot(O1, W2);
-    predictions := AddScalar(M2, b2);
+    predictions := Add(M2, b2);
 
     errors := Subtract(YTrain, predictions);
 
     { Backward pass }
 
     { The second layer (output) }
-    dLdP := MultiplyScalar(errors, negativeTwoOverN);
+    dLdP := Multiply(errors, negativeTwoOverN);
     dLdW2 := MultiplyDot(Transpose(O1), dLdP);
     dLdBias2 := Sum(dLdP);
 
@@ -102,9 +102,9 @@ begin
     dLdW1 := MultiplyDot(XTrainT, dLdN1);
 
     { Update parameters }
-    W1 := Subtract(W1, MultiplyScalar(dLdW1, LearningRate));
-    W2 := Subtract(W2, MultiplyScalar(dLdW2, LearningRate));
-    B1 := Subtract(B1, MultiplyScalar(dLdBias1 * LearningRate);
+    W1 := Subtract(W1, Multiply(dLdW1, LearningRate));
+    W2 := Subtract(W2, Multiply(dLdW2, LearningRate));
+    B1 := Subtract(B1, Multiply(dLdBias1 * LearningRate);
     b2 := b2 - (dLdBias2 * LearningRate);
 
     if (iteration mod PrintEvery) = 0 then
@@ -152,7 +152,7 @@ begin
   N1Test := AddRow(M1Test, B1);
   O1Test := Sigmoid(N1Test);
   M2Test := MultiplyDot(O1Test, W2);
-  testPredictions := AddScalar(M2Test, b2);
+  testPredictions := Add(M2Test, b2);
 
   Writeln('Sample predictions vs actual values:');
   Writeln(Format('%14s%14s%14s', ['Sample No', 'Predicted', 'Actual']));

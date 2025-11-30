@@ -5,11 +5,11 @@ interface
 uses
   MatrixUtility;
 
-procedure GetData(out ATrain, ATest: TMatrix; const RandomSeed: Integer; const TestSplitRatio: Single);
+procedure GetData(out ATrain, ATest: TMatrix2D; const RandomSeed: Integer; const TestSplitRatio: Single);
 
 implementation
 
-function LoadCsv(const FilePath: string): TMatrix;
+function LoadCsv(const FilePath: string): TMatrix2D;
 var
   Lines: TStringList;
   I, J, Rows, Cols: Integer;
@@ -42,9 +42,9 @@ begin
   end;
 end;
 
-procedure GetData(out ATrain, ATest: TMatrix; const RandomSeed: Integer; const TestSplitRatio: Single);
+procedure GetData(out ATrain, ATest: TMatrix2D; const RandomSeed: Integer; const TestSplitRatio: Single);
 var
-  BostonData: TMatrix;
+  BostonData: TMatrix2D;
   InputFeatureCount: Integer;
 begin
   BostonData := LoadCsv('..\..\..\..\..\data\Boston\BostonHousing.csv');
