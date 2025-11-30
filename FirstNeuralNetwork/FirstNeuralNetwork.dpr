@@ -104,7 +104,7 @@ begin
 
     { The first layer (hidden) }
     dLdO1 := MultiplyDot(dLdP, Transpose(W2));
-    dLdN1 := MultiplyElementwise(dLdO1, SigmoidDerivative(N1)); // element-wise
+    dLdN1 := MultiplyElementwise(dLdO1, SigmoidDerivative(N1));
     dLdBias1 := SumByColumn(dLdN1);
     dLdW1 := MultiplyDot(XTrainT, dLdN1);
 
@@ -117,14 +117,11 @@ begin
     if (iteration mod PrintEvery) = 0 then
     begin
       { Mean Squared Error }
-      meanSquaredError := Mean(PowerMatrix(errors, 2));
+      meanSquaredError := Mean(Power(errors, 2));
 
       Writeln(Format('Iteration: %6d | MSE: %8.5f',
         [iteration, meanSquaredError]));
     end;
-
-    { Free intermediate matrices if your MatrixUtility requires manual freeing.
-      If the utility uses dynamic arrays and automatic memory, you can omit. }
   end;
 
   { Print learned parameters (W1, B1, W2, b2) }
@@ -164,26 +161,17 @@ begin
   Writeln('Sample predictions vs actual values:');
   Writeln(Format('%14s%14s%14s', ['Sample No', 'Predicted', 'Actual']));
 
-  //SetLength(showTestSamples, 6);
   showTestSamples := [0, 1, 2, nTest - 3, nTest - 2, nTest - 1];
-  {showTestSamples[0] := 0;
-  showTestSamples[1] := 1;
-  showTestSamples[2] := 2;
-  showTestSamples[3] := nTest - 3;
-  showTestSamples[4] := nTest - 2;
-  showTestSamples[5] := nTest - 1;}
 
   for i := 0 to High(showTestSamples) do
   begin
-    if (showTestSamples[i] < 0) or (showTestSamples[i] >= nTest) then
-      Continue;
     Writeln(Format('%14d%14.4f%14.4f', [showTestSamples[i] + 1,
       testPredictions[showTestSamples[i]][0], YTest[showTestSamples[i]][0]]));
   end;
 
   testErrors := Subtract(YTest, testPredictions);
-  meanSquaredError := Mean(PowerMatrix(testErrors, 2));
-  // highlight output - simple approach: print with stars
+  meanSquaredError := Mean(Power(testErrors, 2));
+
   Writeln;
   Writeln(Format('MSE on test data: %8.5f', [meanSquaredError]));
 

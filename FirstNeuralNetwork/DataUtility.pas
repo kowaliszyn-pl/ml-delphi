@@ -5,69 +5,68 @@ interface
 uses
   MatrixUtility;
 
-procedure GetData(out ATrain, ATest: TMatrix2D; const RandomSeed: Integer;
-  const TestSplitRatio: Single);
+procedure GetData(out ATrain, ATest: TMatrix2D; randomSeed: Integer;
+  testSplitRatio: Single);
 
 implementation
 
 uses
-  Classes, SysUtils;
+  Classes,
+  SysUtils;
 
-function LoadCsv(const FilePath: string): TMatrix2D;
+function LoadCsv(filePath: string): TMatrix2D;
 var
-  Lines: TStringList;
-  I, J, Rows, Cols: Integer;
-  value: String;
-  Values: TArray<String>;
-  MyFormatSettings: TFormatSettings;
+  lines: TStringList;
+  i, j, rows, cols: Integer;
+  value: string;
+  values: TArray<string>;
+  formatSettings: TFormatSettings;
 begin
-  Lines := TStringList.Create;
+  lines := TStringList.Create;
   try
-    Lines.LoadFromFile(FilePath);
+    lines.LoadFromFile(filePath);
 
-    Rows := Lines.Count - 1;
-    Values := Lines[1].Split([',']);
-    Cols := Length(Values);
+    rows := lines.Count - 1;
+    values := lines[1].Split([',']);
+    cols := Length(values);
 
-    Result := CreateMatrix2D(Rows, Cols);
-    MyFormatSettings.DecimalSeparator := '.';
+    Result := CreateMatrix2D(rows, cols);
+    formatSettings.DecimalSeparator := '.';
 
-    for I := 1 to Lines.Count - 1 do
+    for i := 1 to lines.Count - 1 do
     begin
-      Values := Lines[I].Split([',']);
-      for J := 0 to Cols - 1 do
+      values := lines[i].Split([',']);
+      for j := 0 to cols - 1 do
       begin
-        value := Values[J].Trim(['"']);
-        // value := StringReplace(value, ',', '.', [rfReplaceAll]);
-        Result[I - 1][J] := StrToFloat(value, MyFormatSettings);
+        value := values[j].Trim(['"']);
+        Result[i - 1][j] := StrToFloat(value, formatSettings);
       end;
     end;
 
   finally
-    Lines.Free;
+    lines.Free;
   end;
 end;
 
-procedure GetData(out ATrain, ATest: TMatrix2D; const RandomSeed: Integer;
-  const TestSplitRatio: Single);
+procedure GetData(out ATrain, ATest: TMatrix2D; randomSeed: Integer;
+  testSplitRatio: Single);
 var
   BostonData: TMatrix2D;
-  InputFeatureCount: Integer;
+  inputFeatureCount: Integer;
 begin
   BostonData := LoadCsv('..\..\..\data\Boston\BostonHousing.csv');
 
   { Number of independent variables (last column is target) }
-  InputFeatureCount := Length(BostonData[0]) - 2;
-  // last index = cols-1, so end at cols-2
+  inputFeatureCount := Length(BostonData[0]) - 1;
 
   { Standardize features except target }
-  Standardize(BostonData, 0, InputFeatureCount);
+  Standardize(BostonData, 0, inputFeatureCount);
 
   { Shuffle rows }
-  PermuteInPlace(BostonData, RandomSeed);
+  PermuteInPlace(BostonData, randomSeed);
 
   { Split into Train and Test }
-  SplitRowsByRatio(BostonData, TestSplitRatio, ATrain, ATest);
+  SplitRowsByRatio(BostonData, testSplitRatio, ATrain, ATest);
 end;
 
 end.

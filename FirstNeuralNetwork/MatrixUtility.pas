@@ -3,7 +3,8 @@ unit MatrixUtility;
 interface
 
 uses
-  System.SysUtils, System.Math;
+  SysUtils,
+  Math;
 
 type
   TMatrix1D = array of Single;
@@ -26,13 +27,13 @@ function MultiplyElementwise(const A, B: TMatrix2D): TMatrix2D; overload;
 function MultiplyElementwise(const A: TMatrix1D; const B: TMatrix2D)
   : TMatrix2D; overload;
 procedure PermuteInPlace(var A: TMatrix2D; seed: Integer);
-function PowerMatrix(const A: TMatrix2D; p: Integer): TMatrix2D;
-procedure RandomInPlace(const A: TMatrix2D; seed: Integer);
+function Power(const A: TMatrix2D; pow: Integer): TMatrix2D;
+procedure RandomInPlace(var A: TMatrix2D; seed: Integer);
 function Sigmoid(const A: TMatrix2D): TMatrix2D;
 function SigmoidDerivative(const A: TMatrix2D): TMatrix2D;
 procedure SplitRowsByRatio(const A: TMatrix2D; ratio: Single;
   out Set1, Set2: TMatrix2D);
-procedure Standardize(const A: TMatrix2D; firstColIncl, lastColExcl: Integer);
+procedure Standardize(var A: TMatrix2D; firstCol, count: Integer);
 function Subtract(const A, B: TMatrix2D): TMatrix2D; overload;
 function Subtract(const A, B: TMatrix1D): TMatrix1D; overload;
 function Sum(const A: TMatrix2D): Single;
@@ -47,22 +48,13 @@ uses
 { --- Create arrays --- }
 
 function CreateMatrix2D(rows, cols: Integer): TMatrix2D;
-var
-  rowIndex, rowSize: Integer;
 begin
   SetLength(Result, rows, cols);
-  {rowSize := cols * SizeOf(Single);
-  for rowIndex := 0 to rows - 1 do
-    FillChar(Result[rowIndex][0], rowSize, 0);}
 end;
 
 function CreateMatrix1D(rows: Integer): TMatrix1D;
-var
-  rowSize: Integer;
 begin
   SetLength(Result, rows);
-  {rowSize := rows * SizeOf(Single);
-  FillChar(Result, rowSize, 0);}
 end;
 
 { --- Function / procedures --- }
@@ -87,9 +79,6 @@ begin
   aRows := Length(A);
   aCols := Length(A[0]);
   Result := CreateMatrix2D(aRows, aCols);
-
-  {if Length(B) <> aCols then
-    raise Exception.Create(Format('Matrix column count mismatch %5d %5d', [Length(B), aCols]));}
 
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
@@ -190,8 +179,8 @@ end;
 procedure PermuteInPlace(var A: TMatrix2D; seed: Integer);
 var
   aRows, aCols: Integer;
-  i, j, Col: Integer;
-  Temp: Single;
+  i, j, col: Integer;
+  temp: Single;
 begin
   RandSeed := seed;
 
@@ -207,17 +196,17 @@ begin
     if i <> j then
     begin
       // swap entire rows i and j
-      for Col := 0 to aCols - 1 do
+      for col := 0 to aCols - 1 do
       begin
-        Temp := A[i][Col];
-        A[i][Col] := A[j][Col];
-        A[j][Col] := Temp;
+        temp := A[i][col];
+        A[i][col] := A[j][col];
+        A[j][col] := temp;
       end;
     end;
   end;
 end;
 
-function PowerMatrix(const A: TMatrix2D; p: Integer): TMatrix2D;
+function Power(const A: TMatrix2D; pow: Integer): TMatrix2D;
 var
   i, j, aRows, aCols: Integer;
 begin
@@ -227,10 +216,10 @@ begin
 
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
-      Result[i][j] := Power(A[i][j], p);
+      Result[i][j] := Math.Power(A[i][j], pow);
 end;
 
-procedure RandomInPlace(const A: TMatrix2D; seed: Integer);
+procedure RandomInPlace(var A: TMatrix2D; seed: Integer);
 var
   i, j, aRows, aCols: Integer;
 begin
@@ -279,8 +268,10 @@ begin
   rows := Length(A);
   cols := Length(A[0]);
   splitIdx := Trunc(rows * ratio);
-  SetLength(Set1, splitIdx, cols);
-  SetLength(Set2, rows - splitIdx, cols);
+  Set1 := CreateMatrix2D(splitIdx, cols);
+  // SetLength(Set1, splitIdx, cols);
+  Set2 := CreateMatrix2D(rows - splitIdx, cols);
+  // SetLength(Set2, rows - splitIdx, cols);
   for i := 0 to rows - 1 do
     for j := 0 to cols - 1 do
       if i < splitIdx then
@@ -289,14 +280,14 @@ begin
         Set2[i - splitIdx, j] := A[i, j];
 end;
 
-procedure Standardize(const A: TMatrix2D; firstColIncl, lastColExcl: Integer);
+procedure Standardize(var A: TMatrix2D; firstCol, count: Integer);
 var
   i, j, aRows, aCols: Integer;
   Sum, Mean, sumSq, stddev, value: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
-  for j := firstColIncl to lastColExcl - 2 do
+  for j := firstCol to firstCol + count - 1 do
   begin
     Sum := 0;
     for i := 0 to aRows - 1 do
