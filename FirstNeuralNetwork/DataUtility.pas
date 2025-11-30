@@ -19,6 +19,7 @@ var
   I, J, Rows, Cols: Integer;
   value: String;
   Values: TArray<String>;
+  MyFormatSettings: TFormatSettings;
 begin
   Lines := TStringList.Create;
   try
@@ -29,6 +30,7 @@ begin
     Cols := Length(Values);
 
     Result := CreateMatrix2D(Rows, Cols);
+    MyFormatSettings.DecimalSeparator := '.';
 
     for I := 1 to Lines.Count - 1 do
     begin
@@ -36,8 +38,8 @@ begin
       for J := 0 to Cols - 1 do
       begin
         value := Values[J].Trim(['"']);
-        value := StringReplace(value, ',', '.', [rfReplaceAll]);
-        Result[I - 1][J] := StrToFloat(value);
+        // value := StringReplace(value, ',', '.', [rfReplaceAll]);
+        Result[I - 1][J] := StrToFloat(value, MyFormatSettings);
       end;
     end;
 
@@ -52,7 +54,7 @@ var
   BostonData: TMatrix2D;
   InputFeatureCount: Integer;
 begin
-  BostonData := LoadCsv('..\..\..\..\..\data\Boston\BostonHousing.csv');
+  BostonData := LoadCsv('..\..\..\data\Boston\BostonHousing.csv');
 
   { Number of independent variables (last column is target) }
   InputFeatureCount := Length(BostonData[0]) - 2;

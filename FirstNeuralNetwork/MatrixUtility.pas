@@ -51,9 +51,9 @@ var
   rowIndex, rowSize: Integer;
 begin
   SetLength(Result, rows, cols);
-  rowSize := cols * SizeOf(Single);
+  {rowSize := cols * SizeOf(Single);
   for rowIndex := 0 to rows - 1 do
-    FillChar(Result[rowIndex][0], rowSize, 0);
+    FillChar(Result[rowIndex][0], rowSize, 0);}
 end;
 
 function CreateMatrix1D(rows: Integer): TMatrix1D;
@@ -61,8 +61,8 @@ var
   rowSize: Integer;
 begin
   SetLength(Result, rows);
-  rowSize := rows * SizeOf(Single);
-  FillChar(Result, rowSize, 0);
+  {rowSize := rows * SizeOf(Single);
+  FillChar(Result, rowSize, 0);}
 end;
 
 { --- Function / procedures --- }
@@ -73,6 +73,7 @@ var
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
+  Result := CreateMatrix2D(aRows, aCols);
 
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
@@ -85,9 +86,14 @@ var
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
+  Result := CreateMatrix2D(aRows, aCols);
+
+  {if Length(B) <> aCols then
+    raise Exception.Create(Format('Matrix column count mismatch %5d %5d', [Length(B), aCols]));}
+
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
-      A[i, j] := A[i, j] + B[j];
+      Result[i, j] := A[i, j] + B[j];
 end;
 
 function Mean(const A: TMatrix2D): Single;
@@ -123,6 +129,7 @@ var
 begin
   len := Length(A);
   Result := CreateMatrix1D(len);
+
   for i := 0 to len - 1 do
     Result[i] := A[i] * scalar;
 end;
