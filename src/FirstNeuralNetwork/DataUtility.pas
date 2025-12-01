@@ -54,7 +54,7 @@ var
   BostonData: TMatrix2D;
   inputFeatureCount: Integer;
 begin
-  BostonData := LoadCsv('..\..\..\data\Boston\BostonHousing.csv');
+  BostonData := LoadCsv('..\..\..\..\data\Boston\BostonHousing.csv');
 
   { Number of independent variables (last column is target) }
   inputFeatureCount := Length(BostonData[0]) - 1;

@@ -3,13 +3,13 @@
         <ProjectGuid>{186A69E5-66C2-4503-ACAC-FA46CD606862}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="SimpleLinearRegression\SimpleLinearRegression.dproj">
+        <Projects Include="src\SimpleLinearRegression\SimpleLinearRegression.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="MultiLinearRegression\MultiLinearRegression.dproj">
+        <Projects Include="src\MultiLinearRegression\MultiLinearRegression.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="FirstNeuralNetwork\FirstNeuralNetwork.dproj">
+        <Projects Include="src\FirstNeuralNetwork\FirstNeuralNetwork.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -21,31 +21,31 @@
         </BorlandProject>
     </ProjectExtensions>
     <Target Name="SimpleLinearRegression">
-        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj"/>
+        <MSBuild Projects="src\SimpleLinearRegression\SimpleLinearRegression.dproj"/>
     </Target>
     <Target Name="SimpleLinearRegression:Clean">
-        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Clean"/>
+        <MSBuild Projects="src\SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Clean"/>
     </Target>
     <Target Name="SimpleLinearRegression:Make">
-        <MSBuild Projects="SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Make"/>
+        <MSBuild Projects="src\SimpleLinearRegression\SimpleLinearRegression.dproj" Targets="Make"/>
     </Target>
     <Target Name="MultiLinearRegression">
-        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj"/>
+        <MSBuild Projects="src\MultiLinearRegression\MultiLinearRegression.dproj"/>
     </Target>
     <Target Name="MultiLinearRegression:Clean">
-        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj" Targets="Clean"/>
+        <MSBuild Projects="src\MultiLinearRegression\MultiLinearRegression.dproj" Targets="Clean"/>
     </Target>
     <Target Name="MultiLinearRegression:Make">
-        <MSBuild Projects="MultiLinearRegression\MultiLinearRegression.dproj" Targets="Make"/>
+        <MSBuild Projects="src\MultiLinearRegression\MultiLinearRegression.dproj" Targets="Make"/>
     </Target>
     <Target Name="FirstNeuralNetwork">
-        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj"/>
+        <MSBuild Projects="src\FirstNeuralNetwork\FirstNeuralNetwork.dproj"/>
     </Target>
     <Target Name="FirstNeuralNetwork:Clean">
-        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Clean"/>
+        <MSBuild Projects="src\FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Clean"/>
     </Target>
     <Target Name="FirstNeuralNetwork:Make">
-        <MSBuild Projects="FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Make"/>
+        <MSBuild Projects="src\FirstNeuralNetwork\FirstNeuralNetwork.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="SimpleLinearRegression;MultiLinearRegression;FirstNeuralNetwork"/>
