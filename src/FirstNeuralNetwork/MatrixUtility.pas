@@ -88,15 +88,15 @@ end;
 function Mean(const A: TMatrix2D): Single;
 var
   i, j, aRows, aCols: Integer;
-  Sum: Single;
+  sum: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
-  Sum := 0;
+  sum := 0;
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
-      Sum := Sum + A[i][j];
-  Result := Sum / (aRows * aCols);
+      sum := sum + A[i][j];
+  Result := sum / (aRows * aCols);
 end;
 
 function Multiply(const A: TMatrix2D; scalar: Single): TMatrix2D; overload;
@@ -159,7 +159,7 @@ end;
 function MultiplyDot(const A, B: TMatrix2D): TMatrix2D;
 var
   i, j, k, aRows, aCols, bCols: Integer;
-  Sum: Single;
+  sum: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
@@ -169,10 +169,10 @@ begin
   for i := 0 to aRows - 1 do
     for j := 0 to bCols - 1 do
     begin
-      Sum := 0;
+      sum := 0;
       for k := 0 to aCols - 1 do
-        Sum := Sum + A[i][k] * B[k][j];
-      Result[i][j] := Sum;
+        sum := sum + A[i][k] * B[k][j];
+      Result[i][j] := sum;
     end;
 end;
 
@@ -247,7 +247,7 @@ end;
 function SigmoidDerivative(const A: TMatrix2D): TMatrix2D;
 var
   i, j, aRows, aCols: Integer;
-  Sigmoid: Single;
+  sigmoid: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
@@ -255,8 +255,8 @@ begin
   for i := 0 to aRows - 1 do
     for j := 0 to aCols - 1 do
     begin
-      Sigmoid := 1 / (1 + Exp(-A[i, j]));
-      Result[i, j] := Sigmoid * (1 - Sigmoid);
+      sigmoid := 1 / (1 + Exp(-A[i, j]));
+      Result[i, j] := sigmoid * (1 - sigmoid);
     end;
 end;
 
@@ -269,9 +269,7 @@ begin
   cols := Length(A[0]);
   splitIdx := Trunc(rows * ratio);
   Set1 := CreateMatrix2D(splitIdx, cols);
-  // SetLength(Set1, splitIdx, cols);
   Set2 := CreateMatrix2D(rows - splitIdx, cols);
-  // SetLength(Set2, rows - splitIdx, cols);
   for i := 0 to rows - 1 do
     for j := 0 to cols - 1 do
       if i < splitIdx then
@@ -283,27 +281,27 @@ end;
 procedure Standardize(var A: TMatrix2D; firstCol, count: Integer);
 var
   i, j, aRows, aCols: Integer;
-  Sum, Mean, sumSq, stddev, value: Single;
+  sum, mean, sumSq, stddev, value: Single;
 begin
   aRows := Length(A);
   aCols := Length(A[0]);
   for j := firstCol to firstCol + count - 1 do
   begin
-    Sum := 0;
+    sum := 0;
     for i := 0 to aRows - 1 do
-      Sum := Sum + A[i, j];
-    Mean := Sum / aRows;
+      sum := sum + A[i, j];
+    mean := sum / aRows;
     sumSq := 0;
     for i := 0 to aRows - 1 do
     begin
-      value := A[i, j] - Mean;
+      value := A[i, j] - mean;
       sumSq := sumSq + value * value;
     end;
     stddev := Sqrt(sumSq / aRows);
     if stddev = 0 then
       stddev := 1;
     for i := 0 to aRows - 1 do
-      A[i, j] := (A[i, j] - Mean) / stddev;
+      A[i, j] := (A[i, j] - mean) / stddev;
   end;
 end;
 
